@@ -1,50 +1,45 @@
 package model;
 
-import com.pong.game.Application;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import util.Direction;
+
 public class Ball {
-    Application app;
     private int x, y;
-    private final int radius;
+    private final int radius, startX, startY;
     private Direction direction;
     private final float speed;
     private final Random r;
     PongModel model;
+    private Board board;
 
-    public Ball(Application app, PongModel model, float speed) {
-        this.app = app;
+    public Ball(PongModel model, Board board, int x, int y, float speed) {
         this.model = model;
+        this.board = board;
+        this.startX = x;
+        this.startY = y;
         this.speed = speed;
+
         this.r = new Random();
         this.radius = 10;
         initialize();
     }
     private void initialize() {
-        placeAtMiddle();
+        this.x = startX;
+        this.y = startY;
         boolean startEast = r.nextBoolean();
         direction = startEast ? Direction.EAST : Direction.WEST;
-        direction = Direction.WEST;
     }
 
     public void update(){
-        if (x <= 0){
-            placeAtMiddle();
-            model.getRightPaddle().increaseScore();
-        } else if (x >= Application.screenWidth) {
-            model.getLeftPaddle().increaseScore();
-            placeAtMiddle();
-        }else {
-            if(model.ballWallCollision()){
-                collideWithWall();
-            } else if (model.ballPaddleCollision()) {
-                collideWithPaddle();
-            }
-            move();
+        if (getTopY() >= board.getTop() || getBotY() <= board.getBot()){
+            collideWithWall();
+        } else if (model.ballPaddleCollision()) {
+            collideWithPaddle();
         }
+        move();
     }
 
     private void move() {
@@ -74,7 +69,7 @@ public class Ball {
         }
     }
 
-    private void collideWithPaddle(){
+    public void collideWithPaddle(){
         List<Direction> options = null;
         switch (direction){
             case NORTH_EAST:
@@ -122,8 +117,23 @@ public class Ball {
         return radius;
     }
 
-    public void placeAtMiddle(){
-        x = Application.screenWidth / 2;
-        y = Application.screenHeight / 2;
+    public int getTopY(){
+        return this.y + radius;
+    }
+
+    public int getBotY(){
+        return this.y - radius;
+    }
+
+    public int getLeftX(){
+        return this.x - radius;
+    }
+
+    public int getRightX(){
+        return this.x + radius;
+    }
+
+    public void resetPosition(){
+        initialize();
     }
 }

@@ -1,79 +1,64 @@
 package model;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.pong.game.Application;
 
+import player.LeftPaddle;
+import player.RightPaddle;
 import views.GameScreen;
 
 public class PongModel {
     Application app;
+    private Board board;
+    Paddle left, right;
     Ball ball;
-    Paddle leftPaddle, rightPaddle;
     public float paddleSpeed, ballSpeed;
-    public int pongTop, pongBot;
 
-    public PongModel(Application app, int pongTop, int pongBot) {
+    public PongModel(Application app) {
         this.app = app;
-        this.pongTop = pongTop;
-        this.pongBot = pongBot;
         this.paddleSpeed = 450 * Gdx.graphics.getDeltaTime();
         this.ballSpeed = 300 * Gdx.graphics.getDeltaTime();
 
-        this.ball = new Ball(app, this, ballSpeed);
-        int paddleStartPos = Application.screenHeight / 2 - GameScreen.paddleHeight / 2;
-        this.leftPaddle = new Paddle(this, paddleStartPos, paddleSpeed, true);
-        this.rightPaddle = new Paddle(this, paddleStartPos, paddleSpeed, false);
+        this.board = new Board(Application.screenWidth, Application.screenHeight, GameScreen.wallHeight);
+
+        this.ball = new Ball(this, board, Application.screenWidth / 2, Application.screenHeight / 2, ballSpeed);
+        this.left = new LeftPaddle(board, paddleSpeed);
+        this.right = new RightPaddle(board, paddleSpeed);
     }
 
     public void update(){
-        leftPaddle.update();
-        rightPaddle.update();
+        left.update();
+        right.update();
         ball.update();
-    }
 
-    protected boolean ballWallCollision() {
-        return (ball.getY() - ball.getRadius() <= pongBot || // Collide with bottom wall
-                ball.getY() + ball.getRadius() >= pongTop); //  // Collide with top wall
+        if (ball.getLeftX() <= 0){
+            right.increaseScore();
+            ball.resetPosition();
+        } else if (ball.getRightX() >= board.getWidth()) {
+            left.increaseScore();
+            ball.resetPosition();
+        }
     }
 
     public boolean ballPaddleCollision() {
-        int leftPaddleTop = leftPaddle.getTopY();
-        int leftPaddleBot = leftPaddle.getBotY();
-        int leftPaddleX = GameScreen.paddleGoalMargin + GameScreen.paddleWidth;
-
-        int rightPaddleTop = rightPaddle.getTopY();
-        int rightPaddleBot = rightPaddle.getBotY();
-        int rightPaddleX = Application.screenWidth - (GameScreen.paddleGoalMargin + GameScreen.paddleWidth);
-
-        int ballX = ball.getX();
-        int ballY = ball.getY();
-
         // Collide with left paddle
-        if (ballY >= leftPaddleBot && ballY <= leftPaddleTop && ballX <= leftPaddleX + ball.getRadius()){
+        if (ball.getBotY() >= left.getBotY() && ball.getTopY() <= left.getTopY() && ball.getLeftX() <= left.getPaddleEnd()){
             return true;
         }
         // Collide with right paddle
-        else if(ballY >= rightPaddleBot && ballY <= rightPaddleTop && ballX >= rightPaddleX - ball.getRadius()){
+        else if(ball.getBotY() >= right.getBotY() && ball.getTopY() <= right.getTopY() && ball.getRightX() >= right.getPaddleEnd()){
             return true;
         }
 
         return false;
     }
 
-    public boolean canMoveUp(int paddleTop) {
-        return paddleTop + paddleSpeed < Application.screenHeight - GameScreen.wallHeight;
+    public Paddle getLeft() {
+        return left;
     }
 
-    public boolean canMoveDown(int paddleBottom) {
-        return paddleBottom - paddleSpeed > GameScreen.wallHeight;
-    }
-    public Paddle getLeftPaddle() {
-        return leftPaddle;
-    }
-
-    public Paddle getRightPaddle() {
-        return rightPaddle;
+    public Paddle getRight() {
+        return right;
     }
 
     public Ball getBall() {

@@ -14,11 +14,11 @@ public class GameScreen extends ScreenAdapter {
     Application app;
     PongModel model;
     BitmapFont font;
-    ShapeRenderer ball, topWall, bottomWall, leftPaddle, rightPaddle;
+    ShapeRenderer ball, wall, paddle;
     public static final int paddleHeight = Application.screenHeight / 4;
     public static final int paddleWidth = paddleHeight / 8;
-    public static final int wallHeight = paddleWidth;
     public static final int paddleGoalMargin = paddleHeight / 8;
+    public static final int wallHeight = paddleWidth;
     public static final int pongMapTop = Application.screenHeight - wallHeight;
     public static final int pongMapBottom = wallHeight;
 
@@ -26,13 +26,14 @@ public class GameScreen extends ScreenAdapter {
         this.app = app;
         this.font = new BitmapFont();
         this.ball = new ShapeRenderer();
-        this.topWall = new ShapeRenderer();
-        this.bottomWall = new ShapeRenderer();
-        this.leftPaddle = new ShapeRenderer();
-        this.rightPaddle = new ShapeRenderer();
+        this.wall = new ShapeRenderer();
+        this.paddle = new ShapeRenderer();
 
-        ball.setColor(Color.WHITE); topWall.setColor(Color.WHITE); bottomWall.setColor(Color.WHITE); leftPaddle.setColor(Color.WHITE); rightPaddle.setColor(Color.WHITE);
-        this.model = new PongModel(app, pongMapTop, pongMapBottom);
+        ball.setColor(Color.WHITE);
+        wall.setColor(Color.WHITE);
+        paddle.setColor(Color.WHITE);
+
+        this.model = new PongModel(app);
     }
 
     @Override
@@ -49,39 +50,48 @@ public class GameScreen extends ScreenAdapter {
         model.update();
     }
 
-
-
     private void drawWalls() {
-        topWall.begin(ShapeType.Filled);
-        topWall.rect(0, Application.screenHeight - wallHeight, Application.screenWidth, wallHeight / 2);
-        topWall.end();
+        // Top wall
+        wall.begin(ShapeType.Filled);
+        wall.rect(0, Application.screenHeight - wallHeight, Application.screenWidth, (float) wallHeight / 2);
+        wall.end();
 
-        bottomWall.begin(ShapeType.Filled);
-        bottomWall.rect(0, wallHeight / 2, Application.screenWidth, wallHeight / 2);
-        bottomWall.end();
+        // Bottom wall
+        wall.begin(ShapeType.Filled);
+        wall.rect(0, (float) wallHeight / 2, Application.screenWidth, (float) wallHeight / 2);
+        wall.end();
     }
 
     private void drawBall(){
+
+        ball.begin(ShapeType.Filled);
+        ball.setColor(Color.RED);
+        ball.rect(model.getBall().getLeftX(), model.getBall().getBotY(), model.getBall().getRadius() * 2, model.getBall().getRadius() * 2);
+        ball.end();
+
+        ball.setColor(Color.WHITE);
         ball.begin(ShapeType.Filled);
         ball.circle(model.getBall().getX(), model.getBall().getY(), model.getBall().getRadius());
         ball.end();
     }
 
     private void drawPaddles(){
-        leftPaddle.begin(ShapeType.Filled);
-        leftPaddle.rect(paddleGoalMargin, model.getLeftPaddle().getBotY(), paddleWidth, paddleHeight);
-        leftPaddle.end();
+        // Left paddle
+        paddle.begin(ShapeType.Filled);
+        paddle.rect(paddleGoalMargin, model.getLeft().getBotY(), paddleWidth, paddleHeight);
+        paddle.end();
 
-        rightPaddle.begin(ShapeType.Filled);
-        rightPaddle.rect(Application.screenWidth - paddleGoalMargin - paddleWidth, model.getRightPaddle().getBotY(),  paddleWidth, paddleHeight);
-        rightPaddle.end();
+        // Right paddle
+        paddle.begin(ShapeType.Filled);
+        paddle.rect(Application.screenWidth - paddleGoalMargin - paddleWidth, model.getRight().getBotY(),  paddleWidth, paddleHeight);
+        paddle.end();
     }
 
     private void drawScore() {
         font.draw(
                 Application.batch,
-                model.getLeftPaddle().getScore() + " --- " + model.getRightPaddle().getScore(),
-                Application.screenWidth / 2,
+                model.getLeft().getScore() + " --- " + model.getRight().getScore(),
+                (float) Application.screenWidth / 2,
                 100
         );
     }
@@ -90,9 +100,7 @@ public class GameScreen extends ScreenAdapter {
     public void dispose() {
         font.dispose();
         ball.dispose();
-        topWall.dispose();
-        bottomWall.dispose();
-        leftPaddle.dispose();
-        rightPaddle.dispose();
+        wall.dispose();
+        paddle.dispose();
     }
 }

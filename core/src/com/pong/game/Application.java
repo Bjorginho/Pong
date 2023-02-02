@@ -6,8 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import model.PongModel;
-import state.PongState;
+import util.PongState;
 import views.GameScreen;
 import views.MenuScreen;
 
@@ -17,7 +16,6 @@ public class Application extends ApplicationAdapter {
 	PongState state;
 	Screen screen;
 	public static int screenWidth, screenHeight;
-	public float deltaTime;
 
 	@Override
 	public void create () {
@@ -26,13 +24,12 @@ public class Application extends ApplicationAdapter {
 		screen = new MenuScreen(this);
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
-		deltaTime = Gdx.graphics.getDeltaTime();
 	}
 
 	@Override
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 1);
-		screen.render(deltaTime);
+		screen.render(Gdx.graphics.getDeltaTime());
 	}
 	
 	@Override

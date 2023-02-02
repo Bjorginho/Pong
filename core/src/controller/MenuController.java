@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.pong.game.Application;
 
-import state.PongState;
+import util.PongState;
 
 public class MenuController extends InputAdapter {
 
