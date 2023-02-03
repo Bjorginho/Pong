@@ -1,9 +1,8 @@
-package model;
+package pong.object;
 
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.pong.game.Application;
+import pong.Application;
 
-import views.GameScreen;
+import pong.screen.GameScreen;
 
 public abstract class Paddle {
     Board board;

@@ -1,10 +1,11 @@
-package model;
+package pong.object;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import util.Direction;
+import pong.model.PongModel;
+import pong.util.Direction;
 
 public class Ball {
     private int x, y;

@@ -1,4 +1,4 @@
-package com.pong.game;
+package pong;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -6,21 +6,18 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import util.PongState;
-import views.GameScreen;
-import views.MenuScreen;
+import pong.util.PongState;
+import pong.screen.GameScreen;
+import pong.screen.MenuScreen;
 
 public class Application extends ApplicationAdapter {
 	public static SpriteBatch batch;
-	/** SCREENS **/
-	PongState state;
-	Screen screen;
+	private Screen screen;
 	public static int screenWidth, screenHeight;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		state = PongState.MENU;
 		screen = new MenuScreen(this);
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
@@ -39,16 +36,11 @@ public class Application extends ApplicationAdapter {
 	}
 
 	public void setState(PongState state) {
-		this.state = state;
 		if(state == PongState.MENU){
-			setScreen(new MenuScreen(this));
+			screen = new MenuScreen(this);
 		}
 		else if(state == PongState.GAME_ACTIVE){
-			setScreen(new GameScreen(this));
+			screen = new GameScreen();
 		}
-	}
-
-	public void setScreen(Screen screen) {
-		this.screen = screen;
 	}
 }

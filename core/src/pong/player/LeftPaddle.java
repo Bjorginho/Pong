@@ -1,11 +1,11 @@
-package player;
+package pong.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import model.Board;
-import model.Paddle;
-import views.GameScreen;
+import pong.object.Board;
+import pong.object.Paddle;
+import pong.screen.GameScreen;
 
 public class LeftPaddle extends Paddle {
     public LeftPaddle(Board board, float speed) {

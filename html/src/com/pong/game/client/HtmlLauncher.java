@@ -3,7 +3,7 @@ package com.pong.game.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.pong.game.Application;
+import pong.Application;
 
 public class HtmlLauncher extends GwtApplication {
 

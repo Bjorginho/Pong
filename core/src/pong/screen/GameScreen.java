@@ -1,4 +1,4 @@
-package views;
+package pong.screen;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -6,12 +6,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.pong.game.Application;
+import pong.Application;
 
-import model.PongModel;
+import pong.model.PongModel;
 
 public class GameScreen extends ScreenAdapter {
-    Application app;
     PongModel model;
     BitmapFont font;
     ShapeRenderer ball, wall, paddle;
@@ -19,11 +18,8 @@ public class GameScreen extends ScreenAdapter {
     public static final int paddleWidth = paddleHeight / 8;
     public static final int paddleGoalMargin = paddleHeight / 8;
     public static final int wallHeight = paddleWidth;
-    public static final int pongMapTop = Application.screenHeight - wallHeight;
-    public static final int pongMapBottom = wallHeight;
 
-    public GameScreen(Application app) {
-        this.app = app;
+    public GameScreen() {
         this.font = new BitmapFont();
         this.ball = new ShapeRenderer();
         this.wall = new ShapeRenderer();
@@ -33,7 +29,7 @@ public class GameScreen extends ScreenAdapter {
         wall.setColor(Color.WHITE);
         paddle.setColor(Color.WHITE);
 
-        this.model = new PongModel(app);
+        this.model = new PongModel();
     }
 
     @Override
@@ -78,19 +74,19 @@ public class GameScreen extends ScreenAdapter {
     private void drawPaddles(){
         // Left paddle
         paddle.begin(ShapeType.Filled);
-        paddle.rect(paddleGoalMargin, model.getLeft().getBotY(), paddleWidth, paddleHeight);
+        paddle.rect(paddleGoalMargin, model.getLeftPlayer().getBotY(), paddleWidth, paddleHeight);
         paddle.end();
 
         // Right paddle
         paddle.begin(ShapeType.Filled);
-        paddle.rect(Application.screenWidth - paddleGoalMargin - paddleWidth, model.getRight().getBotY(),  paddleWidth, paddleHeight);
+        paddle.rect(Application.screenWidth - paddleGoalMargin - paddleWidth, model.getRightPlayer().getBotY(),  paddleWidth, paddleHeight);
         paddle.end();
     }
 
     private void drawScore() {
         font.draw(
                 Application.batch,
-                model.getLeft().getScore() + " --- " + model.getRight().getScore(),
+                model.getLeftPlayer().getScore() + " --- " + model.getRightPlayer().getScore(),
                 (float) Application.screenWidth / 2,
                 100
         );

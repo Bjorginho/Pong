@@ -1,4 +1,4 @@
-package model;
+package pong.object;
 
 public class Board {
 

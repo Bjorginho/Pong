@@ -1,11 +1,11 @@
-package controller;
+package pong.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.pong.game.Application;
+import pong.Application;
 
-import util.PongState;
+import pong.util.PongState;
 
 public class MenuController extends InputAdapter {
 
